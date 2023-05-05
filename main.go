@@ -18,11 +18,11 @@ func main() {
 	grpc.Serve(plugin)
 }
 
-func (feishu *Hello) Exec(name string, args ...interface{}) (*grpc.Response, error) {
+func (hello *Hello) Exec(name string, args ...interface{}) (*grpc.Response, error) {
 	var v interface{}
 	switch name {
 	case "echo":
-		v = feishu.Echo()
+		v = hello.Echo()
 	default:
 		v = map[string]interface{}{"name": name, "args": args}
 	}
