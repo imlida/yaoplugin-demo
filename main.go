@@ -8,21 +8,20 @@ import (
 	"github.com/yaoapp/kun/grpc"
 )
 
-// Hello
-type Hello struct{ grpc.Plugin }
+type GprcPlugin struct{ grpc.Plugin }
 
 func main() {
 	var output io.Writer = os.Stdout
-	plugin := &Hello{}
+	plugin := &GprcPlugin{}
 	plugin.SetLogger(output, grpc.Trace)
 	grpc.Serve(plugin)
 }
 
-func (hello *Hello) Exec(name string, args ...interface{}) (*grpc.Response, error) {
+func (plugin *GprcPlugin) Exec(name string, args ...interface{}) (*grpc.Response, error) {
 	var v interface{}
 	switch name {
 	case "echo":
-		v = hello.Echo()
+		v = plugin.Echo()
 	default:
 		v = map[string]interface{}{"name": name, "args": args}
 	}
@@ -33,6 +32,6 @@ func (hello *Hello) Exec(name string, args ...interface{}) (*grpc.Response, erro
 	return &grpc.Response{Bytes: bytes, Type: "map"}, nil
 }
 
-func (hello *Hello) Echo() map[string]interface{} {
+func (plugin *GprcPlugin) Echo() map[string]interface{} {
 	return map[string]interface{}{"data": "hello world"}
 }
