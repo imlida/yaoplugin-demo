@@ -2,8 +2,8 @@ package main
 
 import (
 	"encoding/json"
-	"io"
-	"os"
+	"yaoplugin/cmd/hello"
+	"yaoplugin/utils"
 
 	"github.com/yaoapp/kun/grpc"
 )
@@ -11,20 +11,20 @@ import (
 type GprcPlugin struct{ grpc.Plugin }
 
 func main() {
-	var output io.Writer = os.Stdout
+	defer utils.CloseLog()
 	plugin := &GprcPlugin{}
-	plugin.SetLogger(output, grpc.Trace)
 	grpc.Serve(plugin)
 }
 
 func (plugin *GprcPlugin) Exec(name string, args ...interface{}) (*grpc.Response, error) {
 	var v interface{}
 	switch name {
-	case "echo":
-		v = plugin.Echo()
+	case "hello":
+		v = hello.Echo(args...)
 	default:
 		v = map[string]interface{}{"name": name, "args": args}
 	}
+
 	bytes, err := json.Marshal(v)
 	if err != nil {
 		return nil, err
@@ -32,6 +32,7 @@ func (plugin *GprcPlugin) Exec(name string, args ...interface{}) (*grpc.Response
 	return &grpc.Response{Bytes: bytes, Type: "map"}, nil
 }
 
-func (plugin *GprcPlugin) Echo() map[string]interface{} {
-	return map[string]interface{}{"data": "hello world"}
-}
+// func main() {
+// 	plugin := &GprcPlugin{}
+// 	plugin.Exec("hello")
+// }
