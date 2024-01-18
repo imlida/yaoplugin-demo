@@ -10,7 +10,7 @@ func Echo(args ...interface{}) map[string]interface{} {
 	utils.Logf("带有格式的日志: %d", 123)
 
 	if len(args) > 0 {
-		return map[string]interface{}{"code": 0, "message": "该函数不接受参数"}
+		return map[string]interface{}{"code": 400, "message": "该函数不接受参数"}
 	}
 	return map[string]interface{}{"code": 0, "message": "hello world"}
 }
